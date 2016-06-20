@@ -1787,7 +1787,7 @@ function(libname, pkgname) {
   	model.name <- .get.model.name(object.name)
 
   	if (model.name %in% c("ls", "normal", "logit", "probit", "relogit", "poisson", "negbin", "normal.survey", "poisson.survey", "probit.survey", "logit.survey", "gamma", "gamma.survey",
-      				    "cloglog.net", "gamma.net", "logit.net", "probit.net", "glm()", "Glm()", "svyglm()","plm", "pgmm", "ivreg", "lmrob", "glmrob", "dynlm", "gmm", "mclogit", "felm")) {
+      				    "cloglog.net", "gamma.net", "logit.net", "probit.net", "glm()", "Glm()", "svyglm()","plm", "pgmm", "ivreg", "lmrob", "glmrob", "dynlm", "gmm", "mclogit", "felm", "speedglm")) {
   		return(.summary.object$coefficients[,3])
   	}
   	if (model.name %in% c("censReg")) {
@@ -2167,7 +2167,7 @@ function(libname, pkgname) {
   	if (model.name %in% c("lagsarlm", "errorsarlm")) {
   	  return(as.vector(.summary.object$LL))
   	}  	
-  	if (model.name %in% c("clm", "gls")) {
+  	if (model.name %in% c("clm", "gls", "speedglm")) {
   	  return(as.vector(object.name$logLik))
   	}
   	else if (model.name %in% c("coxph", "clogit", "exp", "weibull", "lognorm","tobit", "tobit(AER)", "survreg()")) {
@@ -4743,7 +4743,8 @@ function(libname, pkgname) {
   	model.name <- .get.model.name(object.name)
 	
   	if (model.name %in% c("ls", "normal", "logit", "probit", "relogit", "poisson", "negbin", "normal.survey", "poisson.survey", "probit.survey", "logit.survey", "gamma", "gamma.survey",
-     				    "cloglog.net", "gamma.net", "logit.net", "probit.net", "brglm", "glm()", "Glm()", "svyglm()", "plm", "pgmm", "ivreg", "lmrob", "glmrob", "dynlm", "gmm", "mclogit")) {
+     				    "cloglog.net", "gamma.net", "logit.net", "probit.net", "brglm", "glm()", "Glm()", "svyglm()", "plm", "pgmm", "ivreg", "lmrob", "glmrob", "dynlm", "gmm", "mclogit",
+     				    "speedglm")) {
   		return(.summary.object$coefficients[,"Estimate"])
   	}
   	if (model.name %in% c("Arima")) {
