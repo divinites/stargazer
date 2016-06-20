@@ -884,7 +884,7 @@ function(libname, pkgname) {
   	if (model.name %in% c("ls", "normal", "logit", "probit", "relogit", "poisson", "negbin", "normal.gee", "logit.gee", "probit.gee", "poisson.gee", "normal.gam", 
   				    "logit.gam", "probit.gam", "poisson.gam", "normal.survey", "poisson.survey", "probit.survey", "logit.survey", "gamma", "gamma.gee", "gamma.survey",
   				    "exp", "weibull", "coxph", "clogit", "lognorm", "tobit", "tobit(AER)", "brglm", "glm()", "Glm()", "svyglm()", "gee()", "survreg()", "gam()", "plm", "ivreg", "pmg", "lmrob", "glmrob", 
-              "dynlm", "gls", "rq", "lagsarlm", "errorsarlm", "gmm", "mclogit")) {
+              "dynlm", "gls", "rq", "lagsarlm", "errorsarlm", "gmm", "mclogit", "speedglm")) {
   		return(as.vector(names(object.name$coefficients)))
   	}
   	else if (model.name %in% c("Arima")) {
@@ -902,7 +902,7 @@ function(libname, pkgname) {
   	else if (model.name %in% c("lme","nlme")) {
   	  return(rownames(.summary.object$tTable))
   	}
-  	else if (model.name %in% c("felm", "speedglm")) {
+  	else if (model.name %in% c("felm")) {
   	  return(row.names(object.name$coefficients))
     }
   	else if (model.name %in% c("maBina")) {
@@ -3751,6 +3751,11 @@ function(libname, pkgname) {
       else if (model.name %in% c("maBina")) {
         residual.deviance.value <- object.name$w$deviance
         df.value <- object.name$w$df.residual
+        residual.deviance.output <- as.vector(c(residual.deviance.value, df.value, NA))
+      }
+      else if (model.name %in% c("speedglm")) {
+        residual.deviance.value <- object.name$deviance
+        df.value <- object.name$df
         residual.deviance.output <- as.vector(c(residual.deviance.value, df.value, NA))
       }
   		else if (!is.null(.summary.object$deviance)) {
