@@ -1499,12 +1499,14 @@ function(libname, pkgname) {
   	model.name <- .get.model.name(object.name)
 
   	if (model.name %in% c("ls", "normal", "logit", "probit", "relogit", "poisson", "negbin", "normal.survey", "poisson.survey", "probit.survey", "logit.survey", "gamma", "gamma.survey",
-                            "cloglog.net", "gamma.net", "logit.net", "probit.net", "brglm", "glm()", "Glm()", "svyglm()", "plm", "pgmm", "ivreg", "lmrob", "glmrob", "dynlm", "gmm","mclogit",
-  	                        "speedglm")) {
+                            "cloglog.net", "gamma.net", "logit.net", "probit.net", "brglm", "glm()", "Glm()", "svyglm()", "plm", "pgmm", "ivreg", "lmrob", "glmrob", "dynlm", "gmm","mclogit")) {
   		return(.summary.object$coefficients[,"Std. Error"])
   	}
   	if (model.name %in% c("Arima")) {
   	  return(sqrt(diag(object.name$var.coef)))
+  	}
+  	if (model.name %in% c("speedglm")) {
+  		return(as.numeric(as.character(.summary.object$coefficients[,"Std. Error"])))
   	}
   	if (model.name %in% c("censReg")) {
   	  return(.summary.object$estimate[,2])
@@ -1787,11 +1789,14 @@ function(libname, pkgname) {
   	model.name <- .get.model.name(object.name)
 
   	if (model.name %in% c("ls", "normal", "logit", "probit", "relogit", "poisson", "negbin", "normal.survey", "poisson.survey", "probit.survey", "logit.survey", "gamma", "gamma.survey",
-      				    "cloglog.net", "gamma.net", "logit.net", "probit.net", "glm()", "Glm()", "svyglm()","plm", "pgmm", "ivreg", "lmrob", "glmrob", "dynlm", "gmm", "mclogit", "felm", "speedglm")) {
+      				    "cloglog.net", "gamma.net", "logit.net", "probit.net", "glm()", "Glm()", "svyglm()","plm", "pgmm", "ivreg", "lmrob", "glmrob", "dynlm", "gmm", "mclogit", "felm")) {
   		return(.summary.object$coefficients[,3])
   	}
   	if (model.name %in% c("censReg")) {
   	  return(.summary.object$estimate[,3])
+  	}
+  	if (model.name %in% c("speedglm")) {
+  	  return(as.numeric(as.character(.summary.object$coefficients[,3])))
   	}
   	if (model.name %in% c("mnlogit")) {
   	  return(.summary.object$CoefTable[,3])
@@ -4748,12 +4753,14 @@ function(libname, pkgname) {
   	model.name <- .get.model.name(object.name)
 	
   	if (model.name %in% c("ls", "normal", "logit", "probit", "relogit", "poisson", "negbin", "normal.survey", "poisson.survey", "probit.survey", "logit.survey", "gamma", "gamma.survey",
-     				    "cloglog.net", "gamma.net", "logit.net", "probit.net", "brglm", "glm()", "Glm()", "svyglm()", "plm", "pgmm", "ivreg", "lmrob", "glmrob", "dynlm", "gmm", "mclogit",
-     				    "speedglm")) {
+     				    "cloglog.net", "gamma.net", "logit.net", "probit.net", "brglm", "glm()", "Glm()", "svyglm()", "plm", "pgmm", "ivreg", "lmrob", "glmrob", "dynlm", "gmm", "mclogit")) {
   		return(.summary.object$coefficients[,"Estimate"])
   	}
   	if (model.name %in% c("Arima")) {
   	  return(object.name$coef)
+  	}
+  	if (model.name %in% c("speedglm")) {
+  		return(as.numeric(as.character(.summary.object$coefficients[,"Estimate"])))
   	}
   	if (model.name %in% c("censReg")) {
   	  return(.summary.object$estimate[,1])
