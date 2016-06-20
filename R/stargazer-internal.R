@@ -26,7 +26,7 @@ function(libname, pkgname) {
     if (class(object.name)[1] == "Glm") {
         .summary.object <<- summary.glm(object.name)
     }
-    else if (!(.model.identify(object.name) %in% c("aftreg", "coxreg","phreg","weibreg", "Glm", "bj", "cph", "lrm", "ols", "psm", "Rq", "speedglm"))) {
+    else if (!(.model.identify(object.name) %in% c("aftreg", "coxreg","phreg","weibreg", "Glm", "bj", "cph", "lrm", "ols", "psm", "Rq"))) {
       .summary.object <<- summary(object.name)
     }
     else {
