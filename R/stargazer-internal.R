@@ -26,7 +26,7 @@ function(libname, pkgname) {
     if (class(object.name)[1] == "Glm") {
         .summary.object <<- summary.glm(object.name)
     }
-    else if (!(.model.identify(object.name) %in% c("aftreg", "coxreg","phreg","weibreg", "Glm", "bj", "cph", "lrm", "ols", "psm", "Rq"))) {
+    else if (!(.model.identify(object.name) %in% c("aftreg", "coxreg","phreg","weibreg", "Glm", "bj", "cph", "lrm", "ols", "psm", "Rq", "speedglm"))) {
       .summary.object <<- summary(object.name)
     }
     else {
@@ -540,7 +540,7 @@ function(libname, pkgname) {
       return(as.vector(object.name$w$aic))
     }
     
-    if (model.name %in% c("arima")) {
+    if (model.name %in% c("arima", "speedglm")) {
       return(as.vector(object.name$aic))
     }
     else if (!is.null(.summary.object$aic)) {
@@ -902,7 +902,7 @@ function(libname, pkgname) {
   	else if (model.name %in% c("lme","nlme")) {
   	  return(rownames(.summary.object$tTable))
   	}
-  	else if (model.name %in% c("felm")) {
+  	else if (model.name %in% c("felm", "speedglm")) {
   	  return(row.names(object.name$coefficients))
     }
   	else if (model.name %in% c("maBina")) {
@@ -1499,7 +1499,8 @@ function(libname, pkgname) {
   	model.name <- .get.model.name(object.name)
 
   	if (model.name %in% c("ls", "normal", "logit", "probit", "relogit", "poisson", "negbin", "normal.survey", "poisson.survey", "probit.survey", "logit.survey", "gamma", "gamma.survey",
-                            "cloglog.net", "gamma.net", "logit.net", "probit.net", "brglm", "glm()", "Glm()", "svyglm()", "plm", "pgmm", "ivreg", "lmrob", "glmrob", "dynlm", "gmm","mclogit")) {
+                            "cloglog.net", "gamma.net", "logit.net", "probit.net", "brglm", "glm()", "Glm()", "svyglm()", "plm", "pgmm", "ivreg", "lmrob", "glmrob", "dynlm", "gmm","mclogit",
+  	                        "speedglm")) {
   		return(.summary.object$coefficients[,"Std. Error"])
   	}
   	if (model.name %in% c("Arima")) {
@@ -2310,6 +2311,13 @@ function(libname, pkgname) {
     if (class(object.name)[1]=="nlmerMod") {
       return("nlmer")
     }
+    if (class(object.name)[1]=="speedglm") {
+      if (object.name$family != "binomial" || object.name$link != "logit") {
+        stop("stargazer not implemented for non-logit speedglm models")
+      } else {
+        return("speedglm")
+      }
+    }
        
    if (!is.null(object.name$call)) {
     
@@ -2797,7 +2805,7 @@ function(libname, pkgname) {
     else if (model.name %in% c("lmer","glmer","nlmer")) {
       return(length(resid(object.name)))  
     }
-    else if (model.name %in% c("gmm")) {
+    else if (model.name %in% c("gmm", "speedglm")) {
       return(object.name$n)
     }
     else if (model.name %in% c("plm", "pgmm", "pmg", "rlm", "lmrob", "glmrob", "dynlm", "rq", "lagsarlm", "errorsarlm", "rem.dyad")) {
