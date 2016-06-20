@@ -1226,7 +1226,8 @@ function(libname, pkgname) {
     model.name <- .get.model.name(object.name)
     
   	if (model.name %in% c("ls", "normal", "logit", "probit", "relogit", "poisson", "negbin", "normal.survey", "poisson.survey", "probit.survey", "logit.survey", "gamma", "gamma.survey",
-                            "cloglog.net", "gamma.net", "logit.net", "probit.net", "brglm", "glm()", "Glm()", "svyglm()", "plm", "pgmm", "ivreg", "lmrob", "glmrob", "dynlm", "rq", "gmm","mclogit","felm")) {
+                            "cloglog.net", "gamma.net", "logit.net", "probit.net", "brglm", "glm()", "Glm()", "svyglm()", "plm", "pgmm", "ivreg", "lmrob", "glmrob", "dynlm", "rq", "gmm","mclogit","felm",
+  	                      "speedglm")) {
   		return(.summary.object$coefficients[,4])
   	}
     if (model.name %in% c("censReg")) {
