@@ -1,7 +1,7 @@
 Package: stargazer
 Type: Package
 Title: Well-Formatted Regression and Summary Statistics Tables
-Version: 5.2
+Version: 5.3
 Date: 2015-07-14
 Author: Marek Hlavac <hlavac@fas.harvard.edu>
 Maintainer: Marek Hlavac <hlavac@fas.harvard.edu>
