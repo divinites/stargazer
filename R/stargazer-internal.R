@@ -2175,7 +2175,7 @@ function(libname, pkgname) {
   	if (model.name %in% c("lagsarlm", "errorsarlm")) {
   	  return(as.vector(.summary.object$LL))
   	}  	
-  	if (model.name %in% c("clm", "gls", "speedglm")) {
+  	if (model.name %in% c("clm", "gls")) {
   	  return(as.vector(object.name$logLik))
   	}
   	else if (model.name %in% c("coxph", "clogit", "exp", "weibull", "lognorm","tobit", "tobit(AER)", "survreg()")) {
