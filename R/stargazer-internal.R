@@ -22,11 +22,13 @@ function(libname, pkgname) {
      
   .add.model <-
   function(object.name, user.coef=NULL, user.se=NULL, user.t=NULL, user.p=NULL, auto.t=TRUE, auto.p=TRUE, user.ci.lb=NULL, user.ci.rb=NULL) {
-    
     if (class(object.name)[1] == "Glm") {
         .summary.object <<- summary.glm(object.name)
-    }
-    else if (!(.model.identify(object.name) %in% c("aftreg", "coxreg","phreg","weibreg", "Glm", "bj", "cph", "lrm", "ols", "psm", "Rq"))) {
+    } else if ("speedlm" %in% class(object.name)) {
+      # speedglm-specific fixes
+      .summary.object <<- object.name
+      object.name$df.residual <- object.name$df  # this has a different name in speedglm
+    } else if (!(.model.identify(object.name) %in% c("aftreg", "coxreg","phreg","weibreg", "Glm", "bj", "cph", "lrm", "ols", "psm", "Rq"))) {
       .summary.object <<- summary(object.name)
     }
     else {
@@ -2625,7 +2627,11 @@ function(libname, pkgname) {
     if (class(object.name)[1] == "Glm") {
       .summary.object <<- summary.glm(object.name)
     }
-    else if (!(.model.identify(object.name) %in% c("aftreg", "coxreg","phreg","weibreg", "bj", "cph", "Gls", "lrm", "ols", "psm", "Rq"))) {
+    else if ("speedlm" %in% class(object.name)) {
+      # speedglm-specific fixes
+      summary.object <<- object.name
+      object.name$df.residual <- object.name$df  # different name in speedglm
+    } else if (!(.model.identify(object.name) %in% c("aftreg", "coxreg","phreg","weibreg", "bj", "cph", "Gls", "lrm", "ols", "psm", "Rq"))) {
       .summary.object <<- summary(object.name)
     }
     else {
@@ -3764,6 +3770,7 @@ function(libname, pkgname) {
   			residual.deviance.value <- suppressMessages(.summary.object$deviance)
   			df.value <- object.name$df.residual
   			residual.deviance.output <- as.vector(c(residual.deviance.value, df.value, NA))
+  			print(residual.deviance.output)
   		}
       else if (!is.null(object.name$deviance)) {
   		  residual.deviance.value <- object.name$deviance
