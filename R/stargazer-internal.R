@@ -2319,18 +2319,12 @@ function(libname, pkgname) {
     if (class(object.name)[1]=="nlmerMod") {
       return("nlmer")
     }
-    if (class(object.name)[1]=="speedglm") {
-      if (object.name$family != "binomial" || object.name$link != "logit") {
-        stop("stargazer not implemented for non-logit speedglm models")
-      } else {
-        return("speedglm")
-      }
-    }
-       
+      
    if (!is.null(object.name$call)) {
     
-  	if (object.name$call[1]=="lm()") { return("ls") }
-  	else if ((object.name$call[1]=="glm()") | (object.name$call[1]=="Glm()")) {
+  	if (object.name$call[1]=="lm()" | object.name$call[1] == "speedlm()") { return("ls") }
+  	else if ((object.name$call[1]=="glm()") | (object.name$call[1]=="Glm()") |
+  	         (object.name$call[1] == "speedglm()")) {
   		if (object.name$family$family=="gaussian") {
   			if (object.name$family$link=="identity") {
   				return("normal")
