@@ -28,6 +28,7 @@ function(libname, pkgname) {
       # speedglm-specific fixes
       .summary.object <<- summary(object.name)
       object.name$df.residual <- object.name$df  # this has a different name in speedglm
+      names(.summary.object$coefficients) <- c("Estimate", "Std. Error", "t value", "Pr(>|t|)")
     } else if (!(.model.identify(object.name) %in% c("aftreg", "coxreg","phreg","weibreg", "Glm", "bj", "cph", "lrm", "ols", "psm", "Rq"))) {
       .summary.object <<- summary(object.name)
     }
@@ -542,7 +543,7 @@ function(libname, pkgname) {
       return(as.vector(object.name$w$aic))
     }
     
-    if (model.name %in% c("arima", "speedglm")) {
+    if (model.name %in% c("arima")) {
       return(as.vector(object.name$aic))
     }
     else if (!is.null(.summary.object$aic)) {
@@ -886,7 +887,7 @@ function(libname, pkgname) {
   	if (model.name %in% c("ls", "normal", "logit", "probit", "relogit", "poisson", "negbin", "normal.gee", "logit.gee", "probit.gee", "poisson.gee", "normal.gam", 
   				    "logit.gam", "probit.gam", "poisson.gam", "normal.survey", "poisson.survey", "probit.survey", "logit.survey", "gamma", "gamma.gee", "gamma.survey",
   				    "exp", "weibull", "coxph", "clogit", "lognorm", "tobit", "tobit(AER)", "brglm", "glm()", "Glm()", "svyglm()", "gee()", "survreg()", "gam()", "plm", "ivreg", "pmg", "lmrob", "glmrob", 
-              "dynlm", "gls", "rq", "lagsarlm", "errorsarlm", "gmm", "mclogit", "speedglm")) {
+              "dynlm", "gls", "rq", "lagsarlm", "errorsarlm", "gmm", "mclogit")) {
   		return(as.vector(names(object.name$coefficients)))
   	}
   	else if (model.name %in% c("Arima")) {
@@ -1227,13 +1228,13 @@ function(libname, pkgname) {
 
     model.name <- .get.model.name(object.name)
     
-  	if (model.name %in% c("ls", "normal", "logit", "probit", "relogit", "poisson", "negbin", "normal.survey", "poisson.survey", "probit.survey", "logit.survey", "gamma", "gamma.survey",
+  	if ("speedlm" %in% class(object.name)) {
+  	  # speedglm-specific problem -- p-values are returned as factors
+  	  return(as.numeric(as.character(.summary.object$coefficients[, 4])))
+  	} else if (model.name %in% c("ls", "normal", "logit", "probit", "relogit", "poisson", "negbin", "normal.survey", "poisson.survey", "probit.survey", "logit.survey", "gamma", "gamma.survey",
                             "cloglog.net", "gamma.net", "logit.net", "probit.net", "brglm", "glm()", "Glm()", "svyglm()", "plm", "pgmm", "ivreg", "lmrob", "glmrob", "dynlm", "rq", "gmm","mclogit","felm")) {
   		return(.summary.object$coefficients[,4])
   	}
-    if (model.name %in% c("speedglm")) {
-  		return(as.numeric(as.character(.summary.object$coefficients[,4])))
-    }
     if (model.name %in% c("censReg")) {
       return(.summary.object$estimate[,4])
     }
@@ -1509,9 +1510,6 @@ function(libname, pkgname) {
   	}
   	if (model.name %in% c("Arima")) {
   	  return(sqrt(diag(object.name$var.coef)))
-  	}
-  	if (model.name %in% c("speedglm")) {
-  		return(as.numeric(as.character(.summary.object$coefficients[,"Std. Error"])))
   	}
   	if (model.name %in% c("censReg")) {
   	  return(.summary.object$estimate[,2])
@@ -1799,9 +1797,6 @@ function(libname, pkgname) {
   	}
   	if (model.name %in% c("censReg")) {
   	  return(.summary.object$estimate[,3])
-  	}
-  	if (model.name %in% c("speedglm")) {
-  	  return(as.numeric(as.character(.summary.object$coefficients[,3])))
   	}
   	if (model.name %in% c("mnlogit")) {
   	  return(.summary.object$CoefTable[,3])
@@ -2623,7 +2618,6 @@ function(libname, pkgname) {
 
   .new.table <-
   function(object.name, user.coef=NULL, user.se=NULL, user.t=NULL, user.p=NULL, auto.t=TRUE, auto.p=TRUE, user.ci.lb=NULL, user.ci.rb=NULL) {
-    
     if (class(object.name)[1] == "Glm") {
       .summary.object <<- summary.glm(object.name)
     }
@@ -2631,6 +2625,7 @@ function(libname, pkgname) {
       # speedglm-specific fixes
       .summary.object <<- summary(object.name)
       object.name$df.residual <- object.name$df  # different name in speedglm
+      names(.summary.object$coefficients) <- c("Estimate", "Std. Error", "t value", "Pr(>|t|)")
     } else if (!(.model.identify(object.name) %in% c("aftreg", "coxreg","phreg","weibreg", "bj", "cph", "Gls", "lrm", "ols", "psm", "Rq"))) {
       .summary.object <<- summary(object.name)
     }
@@ -2783,7 +2778,10 @@ function(libname, pkgname) {
   
     model.name <- .get.model.name(object.name)
   
-    if (model.name %in% c("ls", "normal", "logit", "probit", "relogit",
+    if ("speedlm" %in% class(object.name)) {
+      # speedglm doesn't save a list of residuals, so we have to do this manually
+      return(.summary.object$n)
+    } else if (model.name %in% c("ls", "normal", "logit", "probit", "relogit",
                           "poisson", "negbin", "normal.survey", "poisson.survey",
                           "probit.survey", "logit.survey", "gamma", "gamma.survey",
                           "z.arima", "brglm","glm()", "Glm()", "svyglm()")) {
@@ -2813,7 +2811,7 @@ function(libname, pkgname) {
     else if (model.name %in% c("lmer","glmer","nlmer")) {
       return(length(resid(object.name)))  
     }
-    else if (model.name %in% c("gmm", "speedglm")) {
+    else if (model.name %in% c("gmm")) {
       return(object.name$n)
     }
     else if (model.name %in% c("plm", "pgmm", "pmg", "rlm", "lmrob", "glmrob", "dynlm", "rq", "lagsarlm", "errorsarlm", "rem.dyad")) {
@@ -3761,16 +3759,10 @@ function(libname, pkgname) {
         df.value <- object.name$w$df.residual
         residual.deviance.output <- as.vector(c(residual.deviance.value, df.value, NA))
       }
-      else if (model.name %in% c("speedglm")) {
-        residual.deviance.value <- object.name$deviance
-        df.value <- object.name$df
-        residual.deviance.output <- as.vector(c(residual.deviance.value, df.value, NA))
-      }
   		else if (!is.null(.summary.object$deviance)) {
   			residual.deviance.value <- suppressMessages(.summary.object$deviance)
   			df.value <- object.name$df.residual
   			residual.deviance.output <- as.vector(c(residual.deviance.value, df.value, NA))
-  			print(residual.deviance.output)
   		}
       else if (!is.null(object.name$deviance)) {
   		  residual.deviance.value <- object.name$deviance
@@ -4762,9 +4754,6 @@ function(libname, pkgname) {
   	}
   	if (model.name %in% c("Arima")) {
   	  return(object.name$coef)
-  	}
-  	if (model.name %in% c("speedglm")) {
-  		return(as.numeric(as.character(.summary.object$coefficients[,"Estimate"])))
   	}
   	if (model.name %in% c("censReg")) {
   	  return(.summary.object$estimate[,1])
