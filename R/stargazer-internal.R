@@ -26,7 +26,7 @@ function(libname, pkgname) {
         .summary.object <<- summary.glm(object.name)
     } else if ("speedlm" %in% class(object.name)) {
       # speedglm-specific fixes
-      .summary.object <<- object.name
+      .summary.object <<- summary(object.name)
       object.name$df.residual <- object.name$df  # this has a different name in speedglm
     } else if (!(.model.identify(object.name) %in% c("aftreg", "coxreg","phreg","weibreg", "Glm", "bj", "cph", "lrm", "ols", "psm", "Rq"))) {
       .summary.object <<- summary(object.name)
@@ -2629,7 +2629,7 @@ function(libname, pkgname) {
     }
     else if ("speedlm" %in% class(object.name)) {
       # speedglm-specific fixes
-      summary.object <<- object.name
+      .summary.object <<- summary(object.name)
       object.name$df.residual <- object.name$df  # different name in speedglm
     } else if (!(.model.identify(object.name) %in% c("aftreg", "coxreg","phreg","weibreg", "bj", "cph", "Gls", "lrm", "ols", "psm", "Rq"))) {
       .summary.object <<- summary(object.name)
